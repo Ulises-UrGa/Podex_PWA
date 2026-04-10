@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sin conexión - Pokédex</title>
+
+<style>
+
+body{
+font-family: Arial, Helvetica, sans-serif;
+text-align:center;
+background:#f5f5f5;
+padding:40px;
+}
+
+.container{
+max-width:500px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+h1{
+color:#e3350d;
+}
+
+.pokemon{
+font-size:60px;
+margin-bottom:10px;
+}
+
+p{
+color:#555;
+}
+
+button{
+background:#e3350d;
+color:white;
+border:none;
+padding:12px 20px;
+font-size:16px;
+border-radius:5px;
+cursor:pointer;
+margin-top:20px;
+}
+
+button:hover{
+background:#b72a0b;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="pokemon">📡</div>
+
+<h1>Sin conexión</h1>
+
+<p>No hay conexión a internet.</p>
+
+<p>Si ya cargaste Pokémon antes, aún puedes verlos.</p>
+
+<button onclick="window.location.reload()">
+Reintentar conexión
+</button>
+
+</div>
+
+</body>
+
+</html>

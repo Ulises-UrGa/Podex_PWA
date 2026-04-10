@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+ 
+<meta charset="UTF-8">
+<title>Pokédex PWA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+ 
+<meta name="theme-color" content="#e3350d">
+ 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+ 
+<!-- ESTILOS -->
+<link rel="stylesheet" href="css/style.css">
+ 
+</head>
+ 
+<body>
+ 
+<header>
+ 
+<h1>Pokédex</h1>
+ 
+<!-- BOTÓN INSTALAR APP -->
+<button id="installBtn" style="display:none;">
+ Instalar Pokédex
+</button>
+ 
+<!-- REGIONES -->
+<div class="region-buttons">
+ 
+<button onclick="loadGeneration(1,151)">Kanto</button>
+<button onclick="loadGeneration(152,251)">Johto</button>
+<button onclick="loadGeneration(252,386)">Hoenn</button>
+<button onclick="loadGeneration(387,493)">Sinnoh</button>
+<button onclick="loadGeneration(494,649)">Unova</button>
+<button onclick="loadGeneration(650,721)">Kalos</button>
+<button onclick="loadGeneration(722,809)">Alola</button>
+<button onclick="loadGeneration(810,898)">Galar</button>
+<button onclick="loadGeneration(899,1010)">Paldea</button>
+ 
+</div>
+ 
+<!-- BUSCADOR -->
+<input
+type="text"
+id="search"
+placeholder="Buscar por nombre o número">
+ 
+</header>
+ 
+<main id="pokemon-container"></main>
+ 
+<footer>
+<p>Pokedex PWA</p>
+</footer>
+ 
+<!-- MODAL -->
+<div id="modal" class="modal hidden">
+ 
+<div class="modal-content">
+ 
+<span id="close">&times;</span>
+ 
+<div id="modal-body"></div>
+ 
+</div>
+ 
+</div>
+ 
+<!-- SCRIPT APP -->
+<script src="js/app.js"></script>
+ 
+<!-- ========================= -->
+<!-- REGISTRO SERVICE WORKER -->
+<!-- ========================= -->
+<script>
+ 
+if ("serviceWorker" in navigator) {
+ 
+window.addEventListener("load", () => {
+ 
+navigator.serviceWorker.register("./sw.js")
+ 
+.then(reg => {
+console.log("Service Worker registrado", reg);
+})
+ 
+.catch(err => {
+console.log("Error al registrar SW:", err);
+});
+ 
+});
+ 
+}
+ 
+</script>
+ 
+ 
+<!-- ========================= -->
+<!-- BOTÓN INSTALAR PWA -->
+<!-- ========================= -->
+<script>
+ 
+let deferredPrompt;
+ 
+const installBtn = document.getElementById("installBtn");
+ 
+window.addEventListener("beforeinstallprompt", (e) => {
+ 
+e.preventDefault();
+ 
+deferredPrompt = e;
+ 
+installBtn.style.display = "block";
+ 
+});
+ 
+installBtn.addEventListener("click", async () => {
+ 
+installBtn.style.display = "none";
+ 
+deferredPrompt.prompt();
+ 
+const choiceResult = await deferredPrompt.userChoice;
+ 
+if (choiceResult.outcome === "accepted") {
+ 
+console.log("Usuario instaló la app");
+ 
+} else {
+ 
+console.log("Usuario canceló la instalación");
+ 
+}
+ 
+deferredPrompt = null;
+ 
+});
+ 
+</script>
+ 
+</body>
+</html>
