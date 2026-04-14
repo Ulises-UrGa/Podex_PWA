@@ -4,10 +4,33 @@ const modal = document.getElementById("modal");
 const modalBody = document.getElementById("modal-body");
 const closeModal = document.getElementById("close");
 
+// 🔥 NUEVO
+const offlineBanner = document.getElementById("offlineBanner");
+
 let allPokemon = [];
 let currentPokemon = null;
 let shinyActive = false;
 
+
+// =========================
+// 🔌 DETECTAR CONEXIÓN
+// =========================
+window.addEventListener("offline", () => {
+    offlineBanner.style.display = "block";
+});
+
+window.addEventListener("online", () => {
+    offlineBanner.style.display = "none";
+});
+
+if (!navigator.onLine) {
+    offlineBanner.style.display = "block";
+}
+
+
+// =========================
+// CARGAR POKEMON
+// =========================
 async function loadGeneration(startId, endId) {
 
 container.innerHTML = "Cargando Pokémon...";
@@ -24,12 +47,29 @@ fetch(`https://pokeapi.co/api/v2/pokemon/${i}`)
 
 }
 
+try {
+
 allPokemon = await Promise.all(requests);
+
+} catch (error) {
+
+container.innerHTML = `
+<h2>⚠️ Sin conexión</h2>
+<p>No se pudieron cargar los Pokémon</p>
+`;
+
+return;
+
+}
 
 renderPokemon(allPokemon);
 
 }
 
+
+// =========================
+// RENDER
+// =========================
 function renderPokemon(list) {
 
 container.innerHTML = "";
@@ -57,6 +97,10 @@ container.appendChild(card);
 
 }
 
+
+// =========================
+// MODAL
+// =========================
 function showDetails(pokemon) {
 
 currentPokemon = pokemon;
@@ -106,15 +150,21 @@ renderModal();
 
 }
 
+
+// =========================
+// MODAL EVENTS
+// =========================
 closeModal.onclick = () => modal.classList.add("hidden");
 
 modal.onclick = e => {
-
 if (e.target === modal)
 modal.classList.add("hidden");
-
 };
 
+
+// =========================
+// BUSCADOR
+// =========================
 searchInput.addEventListener("input", () => {
 
 const value = searchInput.value.toLowerCase();
@@ -128,7 +178,15 @@ renderPokemon(filtered);
 
 });
 
+
+// =========================
+// FAVORITOS
+// =========================
 function saveFavoriteLocal(pokemon){
+
+if (!navigator.onLine) {
+    alert("⚠️ Estás sin conexión, pero se guardará localmente");
+}
 
 let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
@@ -146,10 +204,10 @@ alert("Pokémon guardado ⭐");
 
 }
 
-loadGeneration(1,151);
 
-
-
+// =========================
+// PWA INSTALL
+// =========================
 let deferredPrompt;
 
 const installBtn = document.getElementById("installBtn");
@@ -175,3 +233,17 @@ const result = await deferredPrompt.userChoice;
 deferredPrompt=null;
 
 });
+
+
+// =========================
+// INICIO
+// =========================
+loadGeneration(1,151);
+
+
+// =========================
+// SW REGISTER
+// =========================
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js");
+}
